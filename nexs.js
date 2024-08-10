@@ -138,6 +138,23 @@ class NEXSJS {
     this.blocks.push(block);
     return block;
   }
+  async defineBlocksFromAPI(link) {
+    try {
+      const response = await fetch(link, { method: 'POST' });
+      if (!response.ok) {
+        throw new Error('Error getting data from API.');
+      }
+      const data = await response.json();
+      if (data[0]?.name && data[0]?.code) {
+        this.blocks = data;
+        return data;
+      } else {
+        throw new Error('API does not contain layouts array.');
+      }
+    } catch (error) {
+      console.error('%c[NEXS.JS] ', 'color: red', error.message);
+    }
+  }
 
   getLayout(name) {
     const layout = this.layouts.find(s => s.name === name);
