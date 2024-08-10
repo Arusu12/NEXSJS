@@ -1,6 +1,5 @@
 // NEXS.JS
-// Created and updated for applications by Arusu
-const animations = ['fadeInFromLeft'];
+const files = { 'css':'https://arusu12.github.io/NEXSJS/nexs.css' }
 class NEXSJS {
   constructor() {
     this.initialized = true;
@@ -12,6 +11,7 @@ class NEXSJS {
     this.layouts = [];
     this.sections = [];
     this.blocks = [];
+    this.animations = ['fadeInFromLeft']
   }
 
   /**
@@ -28,7 +28,7 @@ class NEXSJS {
   loadCSS() {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'NEXSJS/nexs.css';
+    link.href = files['css'];
     document.head.appendChild(link);
   }
 
@@ -368,7 +368,7 @@ class NEXSJS {
    * @param {string} animationName - Name of predefined animation to apply to chosen section.
    */
   animateSection(sectionName, animationName) {
-    if (animations.includes(animationName)) {
+    if (this.animations.includes(animationName)) {
       const section = this.getSection(sectionName);
       if (section) {
         section.classList.add(animationName);
