@@ -11,7 +11,7 @@ class NEXSJS {
     this.layouts = [];
     this.sections = [];
     this.blocks = [];
-    this.animations = ['fadeInFromLeft']
+    this.animations = ['fadeInFromLeft'];
   }
 
   /**
@@ -268,24 +268,6 @@ class NEXSJS {
   
       return value;
     };
-  
-    // const executeFunction = async (code) => {
-    //   try {
-    //     const asyncFunction = new Function('return (async () => {' + code + '})();');
-    //     return await asyncFunction();
-    //   } catch (error) {
-    //     console.error('%c[NEXS.JS] ', 'color: red', 'Error executing function:', error);
-    //     return '';
-    //   }
-    // };
-  
-    // const matches = [...template.matchAll(functionRegex)];
-    // for (const match of matches) {
-    //   const code = match[1];
-    //   await executeFunction(code);
-    //   template = template.replace(match[0], '');
-    // }
-  
     return template.replace(regex, (match, key) => renderValue(key));
   }
 
@@ -362,6 +344,19 @@ class NEXSJS {
       } catch (error) {
         await this.render('/404');
       }
+    } else if(page.type == 'func'){
+      const executeFunction = async (code) => {
+        try {
+          // Use Function constructor to safely execute the code
+          const asyncFunction = new Function('return (async () => {' + code + '})();');
+          return await asyncFunction();
+        } catch (error) {
+          console.error('%c[NEXS.JS] ', 'color: red', 'Error executing function:', error);
+          return '';
+        }
+      };
+    
+      executeFunction(page.func)
     } else {
       this.renderSection('content', page.block);
     }
