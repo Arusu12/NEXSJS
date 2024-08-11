@@ -1,4 +1,4 @@
-import NEXSJS from '../nexs.js'
+import NEXSJS from '/nexs.js'
 import { layouts, pages, blocks } from './data.js';
 
 const app = new NEXSJS();
