@@ -149,7 +149,7 @@ class NEXSJS {
         this.blocks = data;
         return data;
       } else {
-        throw new Error('API does not contain layouts array.');
+        throw new Error('API does not contain blocks array.');
       }
     } catch (error) {
       console.error('%c[NEXS.JS] ', 'color: red', error.message);
