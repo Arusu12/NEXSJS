@@ -5,7 +5,7 @@ class NEXSJS {
     this.initialized = true;
     this.currentLayout = '';
     this.pageLoaderStripe = '';
-    this.renderedSection = '';
+    this.sectionToRender = '';
     this.user = {};
     this.pages = [];
     this.layouts = [];
@@ -52,6 +52,10 @@ class NEXSJS {
     }
     document.body.appendChild(app);
     this.layout = app;
+  }
+
+  goBack(){
+    window.history.back()
   }
 
   async setUser(userAPIEndpoint) {
@@ -304,14 +308,14 @@ class NEXSJS {
     });
   }
 
-  async render(link, renderedSectionName) {
+  async render(link, sectionToRenderName) {
     if (link === '/404' && !this.pages.find(page => page.link === link)) {
       console.error('%c[NEXS.JS] ', 'color: red', 'No 404 Page set!');
       return;
     }
   
-    this.renderedSection = renderedSectionName || this.renderedSection;
-    if (!this.renderedSection) {
+    this.sectionToRender = sectionToRenderName || this.sectionToRender;
+    if (!this.sectionToRender) {
       console.error('%c[NEXS.JS] ', 'color: red', 'Main rendering section is not set.');
       return;
     }
@@ -331,7 +335,7 @@ class NEXSJS {
       if (!layout) return;
     }
   
-    if (page.type === 'http' || page.type === 'ws') {
+    if (page.type === 'http') {
       try {
         const response = await fetch(link, { method: 'POST' });
         if (!response.ok) {
@@ -339,11 +343,15 @@ class NEXSJS {
           return;
         }
         const data = await response.json();
-        this.renderSection(this.renderedSection, page.block, data);
+        this.renderSection(this.sectionToRender, page.block, data);
         return data;
       } catch (error) {
         await this.render('/404');
       }
+    } else if(page.type == 'popup'){
+      
+    } else if(page.type == 'ws'){
+      socket.emit(ws,value)
     } else if(page.type == 'func'){
       const executeFunction = async (code) => {
         try {
@@ -375,7 +383,7 @@ class NEXSJS {
   
   pathToRegex(path) {
     const regexStr = path.replace(/:[^\s/]+/g, '([^\\/]+)');
-    const regex = new RegExp(`^${regexStr}$`);
+    const regex = new RegExp(`^${regexStr}\\/?$`);
     return {
       exec: (link) => {
         const match = link.match(regex);
