@@ -19,11 +19,11 @@ const layouts =
 ]
 const pages = 
 [
-    { link:'/', layout:'main', block:'home', type:'static' },
-    { link:'/ws', layout:'main', block:'ws', type:'static' },
-    { link:'/popup', layout:'main', block:'popup', type:'popup' },
-    { link:'/js', layout:'main', block:'home', type:'func', func:"renderStory(app.sections.get('content'))"},
-    { link:'/404', layout:'main', block:'404', type:'static' }
+    { link:'/NEXSJS/', layout:'main', block:'home', type:'static' },
+    { link:'/NEXSJS/ws', layout:'main', block:'ws', type:'static' },
+    { link:'/NEXSJS/popup', layout:'main', block:'popup', type:'popup' },
+    { link:'/NEXSJS/js', layout:'main', block:'home', type:'func', func:"renderStory(app.sections.get('content'))"},
+    { link:'/NEXSJS/404', layout:'main', block:'404', type:'static' }
 ]
 
 const blocks =
