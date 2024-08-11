@@ -1,0 +1,169 @@
+#app{
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.main{
+  width: 480px;
+  max-height: 600px;
+  height: 600px;
+  display: flex;
+  border-radius: 12px;
+  flex-direction: column;
+  background-color: #141414;
+}
+.navbar{
+  color: white;
+  display: flex;
+  background-color: #00000050;
+  border-radius: 12px 12px 0 0;
+}
+.navbar > .nav{
+  display: flex;
+  width: 100%;
+}
+.nav > .nav-back{
+  padding: 10px 15px;
+  background-color: #0060f0;
+  border-radius: 12px 0 0 0;
+}
+.e{
+  padding: 10px 15px;
+}
+.nav-back:hover{
+  cursor: pointer;
+}
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 20px;
+  padding: 10px 0;
+  gap: 10px;
+  user-select: none;
+  overflow: scroll;
+  color: white;
+  align-items: center;
+  justify-content: center;
+}
+.block-404{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 20px;
+  padding: 10px 0;
+  gap: 10px;
+  user-select: none;
+  color: white;
+  align-items: center;
+  justify-content: center;
+}
+.userPFP{
+  height: 150px;
+  width: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+img{
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.message {
+  display: flex;
+  gap: 10px;
+  animation: fadeIn 0.5s forwards;
+}
+
+.message-nest {
+  display: flex;
+  gap: 10px;
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-content {
+  padding: 10px;
+  border-radius: 25px;
+  background-color: #E0E0E0;
+  color: #000;
+  width:auto;
+}
+.message-img{
+  max-width: 240px;
+  border-radius: 12px;
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+
+.sender {
+  justify-content: right;
+  flex-direction: row-reverse;
+}
+
+.recipient {
+  justify-content: flex-start;
+}
+
+.profile-picture-container {
+  position: relative;
+}
+
+.profile-name {
+  position: absolute;
+  top: -45%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.narration{
+  text-align: center;
+  border-radius: 25px;
+  padding: 5px;
+  font-size: small;
+  background-color: #0000007e;
+  color: white;
+  animation: fadeInNarration 0.5s forwards
+}
+
+@keyframes fadeInNarration {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
