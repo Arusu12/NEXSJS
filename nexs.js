@@ -36,7 +36,7 @@ class NEXSJS {
     const root = document.documentElement;
     root.style.setProperty('--bg-color', bgColor || '#333');
     root.style.setProperty('--bg', bgImageUrl ? `url('${bgImageUrl}')` : '');
-    root.style.setProperty('--bg-opacity', opacity != null ? 1 - opacity : 0.8);
+    root.style.setProperty('--bg-opacity', opacity != null ? 1 - opacity : 1);
     root.style.setProperty('--font-color', fontColor || 'black');
     console.log('%c[NEXS.JS] ', 'color: #365BFF', 'Theme Rendered');
   }
@@ -172,6 +172,11 @@ class NEXSJS {
     return block.code;
   }
 
+  /**
+ * Gets the section by name.
+ * @param {string} name - The name of the section to retrieve.
+ * @returns {HTMLElement|string} - The HTML element of the section, or an error message if not found.
+ */
   getSection(name) {
     const section = this.sections.find(s => s.name === name);
     if (!section) {
@@ -193,7 +198,7 @@ class NEXSJS {
     }
   }
 
-  renderLayout(name) {
+  async renderLayout(name) {
     const layout = this.layouts.find(l => l.name === name);
     if (!layout) {
       console.error('%c[NEXS.JS] ', 'color: red', 'Layout not found.');
@@ -204,7 +209,7 @@ class NEXSJS {
     return this.layout;
   }
 
-  renderSection(section, block, data) {
+  async renderSection(section, block, data) {
     const sectionElement = this.sections.find(s => s.name === section);
     if (!sectionElement) {
       console.error('%c[NEXS.JS] ', 'color: red', 'Section not found.');
@@ -225,38 +230,62 @@ class NEXSJS {
 
     const combinedData = { ...data, user: this.user };
 
-    renderedBlock = this.renderSyntax(renderedBlock, combinedData);
+    renderedBlock = await this.renderSyntax(renderedBlock, combinedData);
 
-    sectionElement.code.innerHTML = renderedBlock;
+    if (sectionElement && sectionElement.code) {
+      if(!sectionElement.code.getAttribute('onclick')){
+        sectionElement.code.setAttribute('onclick','')
+      }
+      sectionElement.code.innerHTML = renderedBlock;
+    } else {
+      console.error('%c[NEXS.JS] ', 'color: red', 'Cannot set innerHTML because sectionElement or sectionElement.code is null.');
+    }
     return sectionElement;
   }
 
-  renderSyntax(template, data) {
+  async renderSyntax(template, data) {
     const regex = /\[\*\{([^}]+)\}\*\]/g;
-
+    const functionRegex = /@\{f\{([^}]+)\}\}/g;
+  
     const renderValue = (key) => {
       const keys = key.split('.');
       let value = data;
-
+  
       for (const k of keys) {
         if (value[k] !== undefined) {
           value = value[k];
         } else {
-          return ''; // Return empty string if key is not found
+          return '';
         }
       }
-
+  
       if (typeof value === 'object') {
-        // Handle arrays and objects
         if (Array.isArray(value)) {
           return value.map(item => JSON.stringify(item)).join(', ');
         }
         return JSON.stringify(value, null, 2);
       }
-
+  
       return value;
     };
-
+  
+    const executeFunction = async (code) => {
+      try {
+        const asyncFunction = new Function('return (async () => {' + code + '})();');
+        return await asyncFunction();
+      } catch (error) {
+        console.error('%c[NEXS.JS] ', 'color: red', 'Error executing function:', error);
+        return '';
+      }
+    };
+  
+    const matches = [...template.matchAll(functionRegex)];
+    for (const match of matches) {
+      const code = match[1];
+      const result = await executeFunction(code);
+      template = template.replace(match[0], '');
+    }
+  
     return template.replace(regex, (match, key) => renderValue(key));
   }
 
@@ -415,6 +444,12 @@ class NEXSJS {
 
   waitAndGo(funct, ms) {
     setTimeout(funct, ms);
+  }
+
+  convertToNode(code){
+    const node = document.createElement('div')
+    node.innerHTML = code;
+    return node.firstElementChild;
   }
   /**
    * Creates an anchor tag.
