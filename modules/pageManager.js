@@ -6,7 +6,7 @@ export class PageManager {
 
     get(url) {
         const layout = this.array.find(s => s.link === url);
-        return layout ? layout.code : `Layout ${url} not found.`;
+        return layout ? layout : `Layout ${url} not found.`;
     }
 
     defineNew(page = { link, layout, block, type }) {
@@ -35,7 +35,7 @@ export class PageManager {
     }
 
     async render(link, sectionToRenderName) {
-        if (link === '/404' && !this.get(link)) {
+        if (!this.get('/404')) {
             console.error('%c[NEXS.JS] ', 'color: red', 'No 404 Page set!');
             return;
         }

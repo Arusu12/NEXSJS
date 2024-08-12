@@ -34,7 +34,8 @@ export class SectionManager {
         let renderedBlock = await this.app.helper.renderSyntax(blockElement, { ...data, user: this.app.user.data });
     
         if (sectionElement) {
-            if (!sectionElement.getAttribute('onclick')) {
+            const get = sectionElement.getAttribute('onclick')
+            if (!get) {
                 sectionElement.setAttribute('onclick', '');
             }
             sectionElement.innerHTML = renderedBlock;
