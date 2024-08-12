@@ -9,7 +9,7 @@ export class SectionManager {
         return section ? section.code : `Section ${name} not found.`;
     }
 
-    setDefaultSectionToRender(name){
+    setDefaultSection(name){
         this.app.sectionToRender = name;
     }
 
