@@ -40,9 +40,10 @@ export class PageManager {
             return;
         }
     
-        this.app.sectionToRender = sectionToRenderName || this.app.sectionToRender;
-        if (!this.app.sectionToRender) {
-            console.error('%c[NEXS.JS] ', 'color: red', 'Main rendering section is not set.');
+        let whatToRenderNow = sectionToRenderName || this.app.sectionToRender;
+
+        if (!whatToRenderNow) {
+            console.error('%c[NEXS.JS] ', 'color: red', 'No section to render. Either a deafult section to render or 2nd argument (section name) must be set.');
             return;
         }
     

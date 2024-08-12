@@ -1,21 +1,10 @@
 export class Listener{
     constructor(app) {
         this.app = app;
+        this.events = [];
     }
 
-    init(overlay) {
-        if (overlay) {
-            document.getElementById('overlay').addEventListener('click', (event) => {
-                if (event.target.classList.contains('visible')) {
-                    event.stopPropagation();
-                    document.getElementById('overlay').innerHTML = '';
-                    if (this.app.sections.get('navbar').classList.contains('expand')) {
-                        this.app.sections.get('menu-button').click();
-                    }
-                }
-            });
-        }
-    
+    init() {
         window.addEventListener('popstate', async () => {
             await this.app.render.page(window.location.pathname);
         });
@@ -37,6 +26,43 @@ export class Listener{
                 }
             });
         });
+    }
+
+    setOnClickRender(element, sectionName, blockName) {
+        const section = this.app.sections.get(sectionName);
+        const event = { element: element, section: section, block: blockName };
+        
+        if (!this.events.some(e => e.element === element && e.section === section && e.block === blockName)) {
+            this.events.push(event);
+            this.renderOnClick(event);
+        }
+        return true;
+    }
+    
+    renderOnClick(event) {
+        if (event.element) {
+            event.element.addEventListener('click', async () => {
+                this.app.sections.render(event.section, event.block);
+            });
+        }
+    }    
+
+    overlay(overlay){
+        if (overlay) {
+            overlay.addEventListener('click', (event) => {
+                if (event.target.classList.contains('visible')) {
+                    event.stopPropagation();
+                    overlay.innerHTML = '';
+
+                    // Needs update
+                    if (this.app.sections.get('navbar').classList.contains('expand')) {
+                        this.app.sections.get('menu-button').click();
+                    }
+                }
+            });
+        } else {
+            console.error('%c[NEXS.JS] ', 'color: red', `Overlay element not defined!`);
+        }
     }
     
     interactiveNavigation(sectionName, blockClassName, highlightColor) {

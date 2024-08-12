@@ -33,12 +33,12 @@ body::before {
   width: 100vw;
   color: var(--font-color);
 }
-#app.row{
+#app.flex-row{
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
-#app.col{
+#app.flex-column{
     display: flex;
     flex-direction: column;
     align-items: center;

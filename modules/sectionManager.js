@@ -9,6 +9,10 @@ export class SectionManager {
         return section ? section.code : `Section ${name} not found.`;
     }
 
+    setDefaultSectionToRender(name){
+        this.app.sectionToRender = name;
+    }
+
     defineNew(name, code) {
         const section = { name, code, layout: this.app.currentLayout };
         this.array.push(section);
@@ -40,7 +44,7 @@ export class SectionManager {
             }
             sectionElement.innerHTML = renderedBlock;
         } else {
-            console.error('%c[NEXS.JS] ', 'color: red', 'Cannot set innerHTML because sectionElement or sectionElement.code is null.');
+            console.error('%c[NEXS.JS] ', 'color: red', 'Cannot set innerHTML because section element is null.');
         }
         return sectionElement;
     }
