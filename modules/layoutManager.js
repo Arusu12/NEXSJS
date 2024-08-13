@@ -2,15 +2,33 @@ export class LayoutManager {
     constructor(app) {
         this.app = app;
         this.array = [];
+        this.sections = [];
     }
 
     get(name) {
         const layout = this.array.find(s => s.name == name);
-        return layout ? layout.code : `Layout ${name} not found.`;
+        if(layout){
+            return layout.code;
+        } else {
+            console.error('%c[NEXS.JS] ', 'color: red', `Layout [${name}] not found.`);
+            return null;
+        }
+    }
+    getSections(name) {
+        const layout = this.array.find(s => s.name == name);
+        if(layout){
+            return layout.sections;
+        } else {
+            console.error('%c[NEXS.JS] ', 'color: red', `Layout [${name}] not found.`);
+            return [];
+        }
     }
 
-    defineNew(name, code) {
-        const layout = { name, code };
+    defineNew(name, code, sections = []) {
+        if (!Array.isArray(sections)) {
+            throw new Error('Sections must be an array');
+        }
+        const layout = { name, code, sections };
         this.array.push(layout);
         return layout;
     }
@@ -22,7 +40,9 @@ export class LayoutManager {
 
             const data = await response.json();
             if (data[0]?.name && data[0]?.code) {
-                this.array = data;
+                data.forEach(l =>{
+                    this.defineNew(l.name, l.code, l.sections)
+                })
                 return data;
             } else {
                 throw new Error('API does not contain layouts array.');
@@ -34,11 +54,11 @@ export class LayoutManager {
 
     async render(name) {
         const layout = this.get(name);
-        if (!layout) {
-            console.error('%c[NEXS.JS] ', 'color: red', 'Layout not found.');
-            return;
-        }
+        if (!layout) return;
         this.app.body.innerHTML = layout;
+        this.getSections(name).forEach(e => {
+            e.code = this.app.body.querySelector(e.code)
+        });
         this.app.currentLayout = name;
         return this.app.body;
     }

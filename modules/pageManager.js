@@ -5,11 +5,16 @@ export class PageManager {
     }
 
     get(url) {
-        const layout = this.array.find(s => s.link === url);
-        return layout ? layout : `Layout ${url} not found.`;
+        const page = this.array.find(s => s.link === url);
+        if(page){
+            return page;
+        } else {
+            console.error('%c[NEXS.JS] ', 'color: red', `Page [${url}] not found.`);
+            return null;
+        }
     }
 
-    defineNew(page = { link, layout, block, type }) {
+    defineNew(page = { link, layout, block, type, func }) {
         if (!page) {
             console.error('%c[NEXS.JS] ', 'color: red', 'No page defined.');
             return;
@@ -59,6 +64,7 @@ export class PageManager {
     
         if (page.layout !== this.app.currentLayout) {
             const layout = this.app.layouts.get(page.layout);
+            this.app.layouts.render(page.layout)
             if (!layout) return;
         }
     
@@ -92,8 +98,9 @@ export class PageManager {
     
             executeFunction(page.func);
         } else {
-            this.app.sections.render('content', page.block);
+            this.app.sections.render(this.app.sectionToRender, page.block);
         }
+        app.listener.init();
         return this.app.body;
     }
 }

@@ -2,15 +2,34 @@ export class BlockManager {
     constructor(app) {
         this.app = app;
         this.array = [];
+        this.sections = [];
     }
 
     get(name) {
         const block = this.array.find(s => s.name === name);
-        return block ? block.code : `Block ${name} not found.`;
+        if(block){
+            return block.code;
+        } else {
+            console.error('%c[NEXS.JS] ', 'color: red', `Block [${name}] not found.`);
+            return null;
+        }
     }
 
-    defineNew(name, code) {
-        const block = { name, code };
+    getSections(name) {
+        const block = this.array.find(s => s.name === name);
+        if(block){
+            return block.sections;
+        } else {
+            console.error('%c[NEXS.JS] ', 'color: red', `Block [${name}] not found.`);
+            return [];
+        }
+    }
+
+    defineNew(name, code, sections = []) {
+        if (!Array.isArray(sections)) {
+            throw new Error('Sections must be an array');
+        }
+        const block = { name, code, sections };
         this.array.push(block);
         return block;
     }
@@ -22,7 +41,9 @@ export class BlockManager {
 
             const data = await response.json();
             if (data[0]?.name && data[0]?.code) {
-                this.array = data;
+                data.forEach(l =>{
+                    this.defineNew(l.name, l.code, l.sections)
+                })
                 return data;
             } else {
                 throw new Error('API does not contain blocks array.');

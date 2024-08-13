@@ -5,8 +5,12 @@ export class Listener{
     }
 
     init() {
-        window.addEventListener('popstate', async () => {
-            await this.app.render.page(window.location.pathname);
+        window.removeEventListener('popstate', this.handlePopstate);
+        this.handlePopstate = async () => { await this.app.render.page(window.location.pathname) };
+        window.addEventListener('popstate', this.handlePopstate);
+    
+        this.app.body.querySelectorAll('a').forEach(a => {
+            a.replaceWith(a.cloneNode(true));
         });
     
         this.app.body.querySelectorAll('a').forEach(a => {
@@ -17,6 +21,7 @@ export class Listener{
     
                 const clickedLink = href.startsWith('/') ? new URL(window.origin + href) : new URL(href);
                 if (a.classList.contains('nexs-popup')) {
+                    await this.app.render.page(window.location.pathname);
                     console.log('Clicked on popup!');
                 } else if (clickedLink.origin !== window.origin) {
                     location.href = href;
@@ -26,7 +31,7 @@ export class Listener{
                 }
             });
         });
-    }
+    }    
 
     setOnClickRender(element, sectionName, blockName) {
         const section = this.app.sections.get(sectionName);
@@ -54,7 +59,7 @@ export class Listener{
                     event.stopPropagation();
                     overlay.innerHTML = '';
 
-                    // Needs update
+                    // Needs update, not usable right now and may cause errors
                     if (this.app.sections.get('navbar').classList.contains('expand')) {
                         this.app.sections.get('menu-button').click();
                     }
