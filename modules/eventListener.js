@@ -6,7 +6,7 @@ export class Listener{
 
     init() {
         window.removeEventListener('popstate', this.handlePopstate);
-        this.handlePopstate = async () => { await this.app.render.page(window.location.pathname) };
+        this.handlePopstate = async () => { await this.app.pages.render(window.location.pathname) };
         window.addEventListener('popstate', this.handlePopstate);
     
         this.app.body.querySelectorAll('a').forEach(a => {
@@ -21,7 +21,7 @@ export class Listener{
     
                 const clickedLink = href.startsWith('/') ? new URL(window.origin + href) : new URL(href);
                 if (a.classList.contains('nexs-popup')) {
-                    await this.app.render.page(window.location.pathname);
+                    await this.app.pages.render(window.location.pathname);
                     console.log('Clicked on popup!');
                 } else if (clickedLink.origin !== window.origin) {
                     location.href = href;

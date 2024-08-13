@@ -17,6 +17,10 @@ body{
     background-position: 50% 50%;
     z-index: -2;
 }
+*::-webkit-scrollbar{
+  height: 0;
+  width: 0;
+}
 body::before {
     content: "";
     background-color: #000000;
