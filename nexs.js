@@ -32,10 +32,10 @@ class NEXSJS {
     this.helper = new NEXS_Helper(this);
   }
 
-  init(theme = { bgColor: '#333', bgImageUrl: '', opacity: 0.8, fontColor: '#8E8E8E' }, layout) {
+  init(theme = { bgColor: '#333', bgImageUrl: '', opacity: 0.8, fontColor: '#8E8E8E' }, className) {
     this.loader.css();
     this.loader.theme(theme);
-    this.loader.prepare(layout);
+    this.loader.prepare(className);
   }
 }
 

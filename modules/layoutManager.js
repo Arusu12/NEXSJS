@@ -24,7 +24,7 @@ export class LayoutManager {
         }
     }
 
-    defineNew(name, code, sections = []) {
+    async defineNew(name, code, sections = []) {
         if (!Array.isArray(sections)) {
             throw new Error('Sections must be an array');
         }
@@ -40,8 +40,8 @@ export class LayoutManager {
 
             const data = await response.json();
             if (data[0]?.name && data[0]?.code) {
-                data.forEach(l =>{
-                    this.defineNew(l.name, l.code, l.sections)
+                data.forEach(async l =>{
+                    await this.defineNew(l.name, l.code, l.sections)
                 })
                 return data;
             } else {
@@ -56,8 +56,8 @@ export class LayoutManager {
         const layout = this.get(name);
         if (!layout) return;
         this.app.body.innerHTML = layout;
-        this.getSections(name).forEach(e => {
-            e.code = this.app.body.querySelector(e.code)
+        this.getSections(name).forEach(async e => {
+            e.code = this.app.body.querySelector(e.query)
         });
         this.app.currentLayout = name;
         return this.app.body;

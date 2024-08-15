@@ -54,35 +54,7 @@ export class SectionManager {
             }
             return null;
         }
-    }
-
-    lookupFromLayouts(name, error = true) {
-        for (const layout of this.app.layouts.array) {
-            const section = this.app.layouts.getSections(layout.name).find(s => s.name === name);
-            if (section) {
-                return section.code;
-            }
-        }
-    
-        if (error) {
-            console.error('%c[NEXS.JS] ', 'color: red', `Section [${name}] not found in any layout.`);
-        }
-        return null;
-    }
-    
-    lookupFromBlocks(name, error = true) {
-        for (const block of this.app.blocks.array) {
-            const section = this.app.blocks.getSections(block.name).find(s => s.name === name);
-            if (section) {
-                return section.code;
-            }
-        }
-    
-        if (error) {
-            console.error('%c[NEXS.JS] ', 'color: red', `Section [${name}] not found in any block.`);
-        }
-        return null;
-    }       
+    }     
 
     setDefaultSection(name){
         this.app.sectionToRender = name;
@@ -96,7 +68,7 @@ export class SectionManager {
     }
 
     async render(section, block, data) {
-        let sectionElement = this.get(section, false) || this.lookupFromLayouts(section, false) || this.lookupFromBlocks(section, false);
+        let sectionElement = this.get(section, false) || this.getFromLayouts(this.app.currentLayout, section, false) || this.getFromBlocks(this.app.currentLayout, section, false);
 
         const blockElement = this.app.blocks.get(block);
         if (!sectionElement) {
@@ -117,9 +89,9 @@ export class SectionManager {
                 sectionElement.setAttribute('onclick', '');
             }
             sectionElement.innerHTML = renderedBlock;
-        } else {
-            console.error('%c[NEXS.JS] ', 'color: red', 'Cannot set innerHTML because section element is null.');
         }
+        
+        app.listener.init();
         return sectionElement;
     }
 }

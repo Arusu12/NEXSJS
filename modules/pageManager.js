@@ -64,8 +64,11 @@ export class PageManager {
     
         if (page.layout !== this.app.currentLayout) {
             const layout = this.app.layouts.get(page.layout);
-            this.app.layouts.render(page.layout)
-            if (!layout) return;
+            if (!layout) {
+                await this.render('/404');
+                return;
+            }
+            await this.app.layouts.render(page.layout);
         }
     
         if (page.type === 'http') {
@@ -98,9 +101,8 @@ export class PageManager {
     
             executeFunction(page.func);
         } else {
-            this.app.sections.render(this.app.sectionToRender, page.block);
+            await this.app.sections.render(this.app.sectionToRender, page.block);
         }
-        app.listener.init();
         return this.app.body;
     }
 }

@@ -27,7 +27,7 @@ export class Listener{
                     location.href = href;
                 } else {
                     history.pushState({}, '', href);
-                    await this.app.render.page(href);
+                    await this.app.pages.render(href);
                 }
             });
         });
